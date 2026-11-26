@@ -28,21 +28,6 @@
 
 Откройте `src/js/config.js` и поправьте числа. Порядок строк совпадает с блоками на странице.
 
-## Запуск локально
-
-Откройте `src/index.html` в браузере или выполните `npm start` (нужен Node.js).
-
-## Публикация
-
-1. Репозиторий → **Settings → Pages → Build and deployment → Source: GitHub Actions**.
-2. Любой пуш в `main` публикует сайт: `https://<логин>.github.io/<репозиторий>/`.
-
-Примечание: на бесплатном тарифе Pages работает только для публичных репозиториев.
-
-## Android APK
-
-**Actions → Build Android APK → Run workflow**. Готовый `app-debug.apk` появится в разделе Artifacts запуска.
-
 ## iPhone
 
 Откройте сайт в Safari → «Поделиться» → «На экран "Домой"».
