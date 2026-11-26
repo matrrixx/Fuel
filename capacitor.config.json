@@ -1,6 +1,0 @@
-{
-  "appId": "com.fuelcalc.app",
-  "appName": "Расход топлива",
-  "webDir": "src",
-  "server": { "androidScheme": "https" }
-}
