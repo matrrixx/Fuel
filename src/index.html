@@ -6,6 +6,7 @@
 <title>Расчёт расхода топлива</title>
 <link rel="icon" type="image/png" href="assets/icons/favicon.png">
 <link rel="apple-touch-icon" href="assets/icons/apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="Расход">
@@ -14,12 +15,19 @@
 </head>
 <body>
 <main>
-<h1>Расчёт расхода топлива</h1>
-<p class="lead">Сначала введите показания одометра, затем распределите пробег и выберите температуру для каждой строки: норма подставится автоматически.</p>
+<header class="top"><h1>Расчёт расхода топлива</h1><button type="button" class="gear" id="gear" aria-expanded="false" aria-controls="admin" aria-label="Настройка норм">⚙</button></header>
+<p class="lead">Сначала введите показания одометра, затем распределите пробег и выберите температуру для каждой строки: норма подставится автоматически. Нормы можно изменить кнопкой ⚙.</p>
+<section class="row admin" id="admin" hidden>
+  <h2>Нормы расхода, л/100 км</h2>
+  <div id="adminList"></div>
+  <div class="actions">
+    <button type="button" class="btn" id="addNorm">+ Добавить строку</button>
+    <button type="button" class="btn danger" id="resetNorms">Сбросить к исходным</button>
+  </div>
+  <p class="hint">Изменения применяются сразу и хранятся на этом устройстве.</p>
+</section>
 <section class="row odo"><h2>Пробег по одометру</h2><div class="fields"><div><label for="o0">В начале, км</label><input type="text" id="o0" inputmode="decimal" placeholder="0"></div><div><label for="o1">В конце, км</label><input type="text" id="o1" inputmode="decimal" placeholder="0"></div></div><div class="res">Проехано: <b id="driven">0</b> км<div id="left"></div></div></section>
-<section class="row" data-i="0"><h2>1. Линейная норма</h2><div class="fields"><div><label for="k0">Пробег, км</label><input type="text" id="k0" inputmode="decimal" placeholder="0"></div><div><span class="lbl">Температура</span><div class="seg"><label><input type="radio" name="t0" value="plus" checked><span>+</span></label><label><input type="radio" name="t0" value="minus"><span>−</span></label></div></div></div><div class="sub">Норма: <b class="norm">7,8</b> л/100 км · расход: <b class="out">0,00</b> л</div></section>
-<section class="row" data-i="1"><h2>2. Трасса</h2><div class="fields"><div><label for="k1">Пробег, км</label><input type="text" id="k1" inputmode="decimal" placeholder="0"></div><div><span class="lbl">Температура</span><div class="seg"><label><input type="radio" name="t1" value="plus" checked><span>+</span></label><label><input type="radio" name="t1" value="minus"><span>−</span></label></div></div></div><div class="sub">Норма: <b class="norm">7,02</b> л/100 км · расход: <b class="out">0,00</b> л</div></section>
-<section class="row" data-i="2"><h2>3. Областной центр</h2><div class="fields"><div><label for="k2">Пробег, км</label><input type="text" id="k2" inputmode="decimal" placeholder="0"></div><div><span class="lbl">Температура</span><div class="seg"><label><input type="radio" name="t2" value="plus" checked><span>+</span></label><label><input type="radio" name="t2" value="minus"><span>−</span></label></div></div></div><div class="sub">Норма: <b class="norm">8,5</b> л/100 км · расход: <b class="out">0,00</b> л</div></section>
+<div id="rows"></div>
 <div class="total" aria-live="polite">
   <small>Всего израсходовано</small>
   <strong><span id="sum">0,00</span> л</strong>
