@@ -44,3 +44,10 @@ input[type=text]:focus-visible,button:focus-visible{outline:2px solid var(--acce
 .actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .hint{margin:10px 0 0;font-size:.85rem;color:var(--muted)}
 @media (prefers-color-scheme:dark){.btn.danger,.odo .warn{color:#ff8a80}}
+.tank .res{margin-top:10px;font-size:.9rem;color:var(--muted)}
+.refuel{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:end;margin-top:10px}
+.refuel .btn{padding:10px 14px}
+.addref{margin-top:12px}
+.total .bad{color:#ff8a80;font-weight:600}
+@media (prefers-color-scheme:dark){.total .bad{color:#b3261e}}
+

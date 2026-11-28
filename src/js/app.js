@@ -1,6 +1,6 @@
 (function(){
   var DEFAULTS=window.FUEL_CONFIG.norms;
-  var KEY='fuel-calc-v4',OKEY='fuel-calc-odo',NKEY='fuel-calc-norms';
+  var KEY='fuel-calc-v4',OKEY='fuel-calc-odo',NKEY='fuel-calc-norms',TKEY='fuel-calc-tank';
 
   function clone(a){return JSON.parse(JSON.stringify(a))}
   function valid(a){
@@ -17,6 +17,10 @@
 
   var odo={a:'',b:''};
   try{var q=JSON.parse(localStorage.getItem(OKEY)||'null');if(q)odo=q}catch(e){}
+
+  var tank={start:'',refuels:[]};
+  try{var tq=JSON.parse(localStorage.getItem(TKEY)||'null');
+    if(tq&&typeof tq.start==='string'&&Array.isArray(tq.refuels))tank={start:tq.start,refuels:tq.refuels.map(String)}}catch(e){}
 
   var state=[];
   try{var s=JSON.parse(localStorage.getItem(KEY)||'null');if(Array.isArray(s))state=s}catch(e){}
@@ -43,6 +47,16 @@
       sec.querySelector('.out').textContent=fmt(l,2);
       sum+=l;km+=k;
     });
+    var rf=tank.refuels.reduce(function(s,v){return s+num(v)},0),
+        has=tank.start!==''||tank.refuels.some(function(v){return v!==''}),
+        end=num(tank.start)+rf-sum,
+        tr=document.getElementById('tankRes'),tm=document.getElementById('tankMeta');
+    tr.textContent=has?'Заправлено: '+fmt(rf,2)+' л · Всего топлива: '+fmt(num(tank.start)+rf,2)+' л':'';
+    tm.hidden=!has;
+    if(has){
+      if(end>=-0.005){tm.textContent='Остаток в конце: '+fmt(Math.max(end,0),2)+' л';tm.className='meta'}
+      else{tm.textContent='Не хватает топлива: '+fmt(-end,2)+' л';tm.className='meta bad'}
+    }
     var oa=num(odo.a),ob=num(odo.b),dr=0,msg='',warn=false;
     if(odo.a!==''&&odo.b!==''){
       if(ob>=oa){dr=ob-oa;var rest=dr-km;
@@ -53,7 +67,7 @@
     var lf=document.getElementById('left');lf.textContent=msg;lf.className=warn?'warn':'';
     document.getElementById('sum').textContent=fmt(sum,2);
     document.getElementById('km').textContent=fmt(km,1);
-    try{localStorage.setItem(OKEY,JSON.stringify(odo));localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
+    try{localStorage.setItem(OKEY,JSON.stringify(odo));localStorage.setItem(TKEY,JSON.stringify(tank));localStorage.setItem(KEY,JSON.stringify(state))}catch(e){}
   }
 
   /* ---------- строки калькулятора ---------- */
@@ -113,6 +127,26 @@
     buildAdmin();build();
   });
 
+  /* ---------- остаток и заправки ---------- */
+  var refEl=document.getElementById('refuels');
+  function buildRefuels(){
+    refEl.innerHTML='';
+    tank.refuels.forEach(function(v,i){
+      var d=document.createElement('div');d.className='refuel';
+      d.innerHTML='<div><label for="rf'+i+'">Заправка '+(i+1)+', л</label><input type="text" id="rf'+i+'" inputmode="decimal" placeholder="0"></div><button type="button" class="btn danger" aria-label="Удалить заправку '+(i+1)+'">\u2715</button>';
+      var inp=d.querySelector('input');inp.value=v;
+      inp.addEventListener('input',function(){tank.refuels[i]=inp.value;calc()});
+      d.querySelector('button').addEventListener('click',function(){tank.refuels.splice(i,1);buildRefuels();calc()});
+      refEl.appendChild(d);
+    });
+  }
+  var ts=document.getElementById('tankStart');ts.value=tank.start;
+  ts.addEventListener('input',function(){tank.start=ts.value;calc()});
+  document.getElementById('addRefuel').addEventListener('click',function(){
+    tank.refuels.push('');buildRefuels();calc();
+    var l=refEl.querySelector('.refuel:last-child input');if(l)l.focus();
+  });
+
   /* ---------- одометр и очистка ---------- */
   ['a','b'].forEach(function(k,j){
     var o=document.getElementById('o'+j);o.value=odo[k];
@@ -121,10 +155,12 @@
   document.getElementById('reset').addEventListener('click',function(){
     state.forEach(function(s){s.km=''});
     odo={a:'',b:''};document.getElementById('o0').value='';document.getElementById('o1').value='';
+    tank={start:'',refuels:[]};ts.value='';buildRefuels();
     build();
   });
 
   buildAdmin();
+  buildRefuels();
   build();
 
   /* ---------- работа без интернета ---------- */

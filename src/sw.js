@@ -1,6 +1,6 @@
 // Service worker: работа без интернета.
 // Поднимайте номер версии при изменении списка файлов.
-var CACHE = 'fuel-v3';
+var CACHE = 'fuel-v4';
 var ASSETS = [
   './',
   'index.html',

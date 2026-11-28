@@ -27,11 +27,13 @@
   <p class="hint">Изменения применяются сразу и хранятся на этом устройстве.</p>
 </section>
 <section class="row odo"><h2>Пробег по одометру</h2><div class="fields"><div><label for="o0">В начале, км</label><input type="text" id="o0" inputmode="decimal" placeholder="0"></div><div><label for="o1">В конце, км</label><input type="text" id="o1" inputmode="decimal" placeholder="0"></div></div><div class="res">Проехано: <b id="driven">0</b> км<div id="left"></div></div></section>
+<section class="row tank"><h2>Топливо</h2><div class="fields"><div><label for="tankStart">Остаток перед поездкой, л</label><input type="text" id="tankStart" inputmode="decimal" placeholder="0"></div></div><div id="refuels"></div><button type="button" class="btn addref" id="addRefuel">+ Заправка</button><div class="res" id="tankRes"></div></section>
 <div id="rows"></div>
 <div class="total" aria-live="polite">
   <small>Всего израсходовано</small>
   <strong><span id="sum">0,00</span> л</strong>
   <div class="meta">Общий пробег: <span id="km">0</span> км</div>
+  <div class="meta" id="tankMeta" hidden></div>
 </div>
 <button class="reset" id="reset" type="button">Очистить</button>
 </main>
